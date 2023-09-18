@@ -36,7 +36,7 @@ app.get('/lessons/:studentId', (req, res) => {
   const studentId = req.params.studentId;
 
   // Query the database to retrieve all lessons for the specified student ID
-  db.query('SELECT * FROM lesson_scores WHERE student_id = ?', [studentId], (err, results) => {
+  db.query('SELECT * FROM emis_learning_logs WHERE student_id = ?', [studentId], (err, results) => {
     if (err) {
       res.status(500).json({ error: err.message });
       return;
@@ -51,7 +51,7 @@ app.get('/student/:studentId', (req, res) => {
     const studentId = req.params.studentId;
 
     // Query the database to retrieve the cumulative score for the specified student ID
-    db.query('SELECT SUM(score) AS totalScore FROM lesson_scores WHERE student_id = ?', [studentId], (err, results) => {
+    db.query('SELECT SUM(score) AS totalScore FROM emis_learning_logs WHERE student_id = ?', [studentId], (err, results) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -73,7 +73,7 @@ app.get('/lesson/:lessonId', (req, res) => {
     const lessonId = req.params.lessonId;
 
     // Query the database to retrieve the score for the specified lesson ID
-    db.query('SELECT score FROM lesson_scores WHERE lesson_id = ?', [lessonId], (err, results) => {
+    db.query('SELECT score FROM emis_learning_logs WHERE lesson_id = ?', [lessonId], (err, results) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -95,7 +95,7 @@ app.post('/:studentId/:lessonId', (req, res) => {
     const { score, sessionId } = req.body;
 
     // Check if a score entry already exists for the student, lesson, and session
-    db.query('SELECT * FROM lesson_scores WHERE student_id = ? AND lesson_id = ? AND session_id = ?', [studentId, lessonId, sessionId], (err, results) => {
+    db.query('SELECT * FROM emis_learning_logs WHERE student_id = ? AND lesson_id = ? AND session_id = ?', [studentId, lessonId, sessionId], (err, results) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
@@ -104,7 +104,7 @@ app.post('/:studentId/:lessonId', (req, res) => {
         if (results.length === 0) {
             // If no entry exists, create a new score entry
             const insertQuery = `
-                INSERT INTO lesson_scores (student_id, lesson_id, score, date_completed, session_id)
+                INSERT INTO emis_learning_logs (student_id, lesson_id, score, date_completed, session_id)
                 VALUES (?, ?, ?, NOW(), ?)
             `;
             db.query(insertQuery, [studentId, lessonId, score, sessionId], (err) => {
@@ -116,7 +116,7 @@ app.post('/:studentId/:lessonId', (req, res) => {
             });
         } else {
             // If an entry exists, update the existing score
-            const updateQuery = 'UPDATE lesson_scores SET score = ? WHERE student_id = ? AND lesson_id = ? AND session_id = ?';
+            const updateQuery = 'UPDATE emis_learning_logs SET score = ? WHERE student_id = ? AND lesson_id = ? AND session_id = ?';
             db.query(updateQuery, [score, studentId, lessonId, sessionId], (err) => {
                 if (err) {
                     res.status(500).json({ error: err.message });

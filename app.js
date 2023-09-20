@@ -23,11 +23,11 @@ app.use((req, res, next) => {
 });
 
 db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-    return;
-  }
-  console.log('Connected to MySQL');
+    if (err) {
+        console.error('Error connecting to MySQL:', err);
+        throw err; // Terminate the application if the database connection fails
+    }
+    console.log('Connected to MySQL');
 });
 
 app.use(express.json());
@@ -129,7 +129,10 @@ app.post('/:studentId/:lessonId', (req, res) => {
 });
 
 
- 
+app.use((err, req, res, next) => {
+  console.error('Uncaught error:', err);
+  res.status(500).json({ error: 'Something went wrong' });
+});
 
 // Start the server
 app.listen(port, () => {

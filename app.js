@@ -109,7 +109,7 @@ app.post('/:studentId/:lessonId', (req, res) => {
     const { score, sessionId } = req.body;
     try {
         // Check if a score entry already exists for the student, lesson, and session
-        db.query('SELECT * FROM emis_learning_logs WHERE student_id = ? AND lesson_id = ? AND session_id = ?', [studentId, lessonId, sessionId], (err, results) => {
+        db.query('SELECT * FROM emis_learning_logs WHERE student_id = ? AND lesson_id = ?', [studentId, lessonId], (err, results) => {
             if (err) {
                 res.status(500).json({ error: err.message });
                 return;

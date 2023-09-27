@@ -132,6 +132,8 @@ app.post('/:studentId/:lessonId', (req, res) => {
                 // If an entry exists, update the existing score by adding the provided score
                 const existingScore = results[0].score;
                 const newScore = existingScore + score;
+                console.log(existingScore)
+                console.log(newScore);
                 const updateQuery = 'UPDATE emis_learning_logs SET score = ? WHERE student_id = ? AND lesson_id = ? AND session_id = ?';
                 db.query(updateQuery, [newScore, studentId, lessonId, sessionId], (err) => {
                     if (err) {

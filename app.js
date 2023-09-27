@@ -119,7 +119,7 @@ app.post('/:studentId/:lessonId', (req, res) => {
                 // If no entry exists, create a new score entry
                 const insertQuery = `
                     INSERT INTO emis_learning_logs (student_id, lesson_id, score, date_completed)
-                    VALUES (?, ?, ?, NOW(), ?)
+                    VALUES (?, ?, ?, NOW())
                 `;
                 db.query(insertQuery, [studentId, lessonId, score, sessionId], (err) => {
                     if (err) {

@@ -118,8 +118,8 @@ app.post('/:studentId/:lessonId', (req, res) => {
             if (results.length === 0) {
                 // If no entry exists, create a new score entry
                 const insertQuery = `
-                    INSERT INTO emis_learning_logs (student_id, lesson_id, score, date_completed, session_id)
-                    VALUES (?, ?, ?, NOW(), ?)
+                    INSERT INTO emis_learning_logs (student_id, lesson_id, score, date_completed)
+                    VALUES (?, ?, ?, NOW())
                 `;
                 db.query(insertQuery, [studentId, lessonId, score, sessionId], (err) => {
                     if (err) {
@@ -134,8 +134,8 @@ app.post('/:studentId/:lessonId', (req, res) => {
                 const newScore = existingScore + score;
                 console.log(existingScore)
                 console.log(newScore);
-                const updateQuery = 'UPDATE emis_learning_logs SET score = ? WHERE student_id = ? AND lesson_id = ? AND session_id = ?';
-                db.query(updateQuery, [newScore, studentId, lessonId, sessionId], (err) => {
+                const updateQuery = 'UPDATE emis_learning_logs SET score = ? WHERE student_id = ? AND lesson_id = ?';
+                db.query(updateQuery, [newScore, studentId, lessonId], (err) => {
                     if (err) {
                         res.status(500).json({ error: err.message });
                         return;
